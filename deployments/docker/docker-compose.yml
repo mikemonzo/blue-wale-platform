@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  idp:
+    build:
+      context: ../../
+      dockerfile: deployments/docker/idp/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=development
+    volumes:
+      - ../../backend/services/idp/config:/app/config
+    depends_on:
+      - postgres
+    networks:
+      - blue-whale-network
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bwadmin
+      POSTGRES_PASSWORD: bwpassword
+      POSTGRES_DB: idp_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - blue-whale-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - blue-whale-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  blue-whale-network:
+    driver: bridge
