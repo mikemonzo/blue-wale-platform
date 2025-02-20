@@ -1,18 +1,28 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
+	"strconv"
+
+	"github.com/mikemonzo/blue-whale-platform/backend/services/idp/config"
 )
 
 func main() {
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "OK")
-	})
+	cfg := config.NewConfig()
 
-	log.Printf("Starting IDP service on :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	setupRoutes()
+
+	log.Printf("Starting IDP service on :%d", cfg.Server.Port)
+	if err := http.ListenAndServe(":"+strconv.Itoa(cfg.Server.Port), nil); err != nil {
 		log.Fatalf("Error starting server: %v", err)
 	}
+}
+
+func setupRoutes() {
+	http.HandleFunc("/health", healthHandler)
+}
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
 }

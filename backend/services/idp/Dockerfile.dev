@@ -1,0 +1,39 @@
+FROM golang:1.24-alpine
+
+# Install necessary development tools
+RUN apk add --no-cache \
+    git \
+    make \
+    curl \
+    gcc \
+    g++ \
+    postgresql-client \
+    bash
+
+# Set working directory
+WORKDIR /workspace
+
+# Create necessary directories
+RUN mkdir -p \
+    services/idp/cmd \
+    services/idp/tmp
+
+# Install Air for hot reload
+RUN go install github.com/air-verse/air@latest
+
+# Copy go.mod and go.sum files
+COPY go.work* .
+COPY services/idp/go.* ./services/idp/
+COPY services/idp/.air.toml ./services/idp/.air.toml
+
+# Download dependencies
+RUN go mod download
+
+# Set working directory to IDP service
+WORKDIR /workspace/services/idp
+
+# Expose port
+EXPOSE 8080
+
+# Start air for hot reload
+CMD ["air"]

@@ -1,18 +1,17 @@
-version: '3.8'
-
 services:
   idp:
     build:
-      context: ../../
-      dockerfile: deployments/docker/idp/Dockerfile
+      context: ./backend
+      dockerfile: services/idp/Dockerfile
     ports:
       - "8080:8080"
     environment:
       - ENV=development
     volumes:
-      - ../../backend/services/idp/config:/app/config
+      - ./backend/services/idp:/app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - blue-whale-network
 
@@ -29,18 +28,18 @@ services:
     networks:
       - blue-whale-network
 
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - blue-whale-network
+  #redis:
+  #  image: redis:9-alpine
+  #  ports:
+  #    - "6379:6379"
+  #  volumes:
+  #    - redis_data:/data
+  #  networks:
+  #    - blue-whale-network
 
 volumes:
   postgres_data:
-  redis_data:
+  #redis_data:
 
 networks:
   blue-whale-network:

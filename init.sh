@@ -6,9 +6,7 @@
 mkdir -p .github/{workflows,} \
         backend/services/{idp,tenant-service,api-gateway}/{cmd,internal,config,migrations,test,features} \
         backend/shared/{common,pkg} \
-        deployments/{docker,kubernetes,terraform}/{idp,tenant-service,api-gateway} \
-        docs/{architecture/{diagrams,decisions},api/openapi,development} \
-        scripts tools web/admin-panel mobile/{android,ios}
+        web/admin-panel mobile/{android,ios}
 
 # IDP Service
 cd backend/services/idp

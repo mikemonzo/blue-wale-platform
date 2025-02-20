@@ -34,85 +34,34 @@ graph TD
 
 ```
 saas-file-platform/
-├── .github/
-│   ├── workflows/
-│   │   ├── ci.yml
-│   │   └── release.yml
-│   └── PULL_REQUEST_TEMPLATE.md
-├── deployments/
-│   ├── docker/
+├── backend/
+│   ├── services/
 │   │   ├── idp/
-│   │   │   └── Dockerfile
+│   │   │   ├── cmd/
+│   │   │   │   └── main.go
+│   │   │   ├── internal/
+│   │   │   │   ├── application/
+│   │   │   │   │   ├── commands/
+│   │   │   │   │   ├── queries/
+│   │   │   │   │   └── services/
+│   │   │   │   ├── domain/
+│   │   │   │   │   ├── model/
+│   │   │   │   │   ├── repository/
+│   │   │   │   │   └── service/
+│   │   │   │   └── infrastructure/
+│   │   │   │       ├── persistence/
+│   │   │   │       ├── auth/
+│   │   │   │       └── api/
+│   │   │   ├── config/
+│   │   │   │   ├── config.go
+│   │   │   │   └── config.yaml
+│   │   │   ├── test/
+│   │   │   ├── go.mod
+│   │   │   └── go.sum
 │   │   ├── tenant-service/
-│   │   │   └── Dockerfile
+│   │   │   └── [estructura similar a idp]
 │   │   └── api-gateway/
-│   │       └── Dockerfile
-│   ├── kubernetes/
-│   │   ├── base/
-│   │   └── overlays/
-│   └── terraform/
-│       ├── modules/
-│       └── environments/
-├── docs/
-│   ├── architecture/
-│   │   ├── diagrams/
-│   │   └── decisions/
-│   ├── api/
-│   │   └── openapi/
-│   └── development/
-│       └── getting-started.md
-├── shared/
-│   ├── common/
-│   │   ├── auth/
-│   │   │   ├── jwt/
-│   │   │   └── middleware/
-│   │   ├── database/
-│   │   │   ├── postgres/
-│   │   │   └── migrations/
-│   │   ├── logging/
-│   │   ├── monitoring/
-│   │   ├── testing/
-│   │   ├── go.mod
-│   │   └── go.sum
-│   └── pkg/
-│       ├── tenant/
-│       ├── errors/
-│       ├── validation/
-│       ├── go.mod
-│       └── go.sum
-├── services/
-│   ├── idp/
-│   │   ├── cmd/
-│   │   │   └── main.go
-│   │   ├── internal/
-│   │   │   ├── application/
-│   │   │   │   ├── commands/
-│   │   │   │   ├── queries/
-│   │   │   │   └── services/
-│   │   │   ├── domain/
-│   │   │   │   ├── model/
-│   │   │   │   ├── repository/
-│   │   │   │   └── service/
-│   │   │   └── infrastructure/
-│   │   │       ├── persistence/
-│   │   │       ├── auth/
-│   │   │       └── api/
-│   │   ├── config/
-│   │   │   ├── config.go
-│   │   │   └── config.yaml
-│   │   ├── migrations/
-│   │   ├── test/
-│   │   ├── go.mod
-│   │   └── go.sum
-│   ├── tenant-service/
-│   │   └── [estructura similar a idp]
-│   └── api-gateway/
-│       └── [estructura similar a idp]
-├── scripts/
-│   ├── setup.sh
-│   └── dev.sh
-├── tools/
-│   └── go.mod
+│   │       └── [estructura similar a idp]
 ├── web/
 │   └── admin-panel/
 ├── mobile/
@@ -120,7 +69,31 @@ saas-file-platform/
 │   └── ios/
 ├── go.work
 ├── go.work.sum
-├── Makefile
 ├── docker-compose.yml
+├── docker-compose.dev.yml
 └── README.md
 ```
+
+# Funcionalidades
+
+## IDP Service Responsibilities
+User Authentication & Authorization
+- User registration and login
+- Password management
+- Multi-factor authentication (2FA)
+- OAuth2/OIDC integration
+- Session management
+- JWT token management
+Role & Permission Management
+- RBAC (Role-Based Access Control)
+- Permission assignment
+- Access control validation
+User Management
+- User profile CRUD
+- User status management (active/inactive)
+- Password reset/recovery
+Security & Audit
+- Authentication logging
+- Security event tracking
+- Failed login attempts
+- Password change history

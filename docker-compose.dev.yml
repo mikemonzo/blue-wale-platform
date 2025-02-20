@@ -1,0 +1,61 @@
+services:
+  idp:
+    build:
+      context: ./backend
+      dockerfile: services/idp/Dockerfile.dev
+    ports:
+      - "8080:8080"
+    environment:
+      - ENV=development
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=bwadmin
+      - POSTGRES_PASSWORD=bwpassword
+      - POSTGRES_DB=idp_db
+    volumes:
+      - ./backend:/workspace
+      - go-cache:/root/.cache/go-build
+      - go-mod-cache:/go/pkg/mod
+    working_dir: /workspace/services/idp
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - blue-whale-network
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: bwadmin
+      POSTGRES_PASSWORD: bwpassword
+      POSTGRES_DB: idp_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bwadmin -d idp_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - blue-whale-network
+
+  #redis:
+  #  image: redis:9-alpine
+  #  ports:
+  #    - "6379:6379"
+  #  volumes:
+  #    - redis_data:/data
+  #  networks:
+  #    - blue-whale-network
+
+volumes:
+  postgres_data:
+  go-cache:
+  go-mod-cache:
+  #redis_data:
+
+networks:
+  blue-whale-network:
+    driver: bridge
