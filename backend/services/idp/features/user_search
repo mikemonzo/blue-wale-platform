@@ -1,0 +1,21 @@
+Feature: User Search
+  As an administrator
+  I want to search for users
+  So that I can find specific user accounts
+
+  Scenario: Search users by email pattern
+    Given I am an authenticated administrator
+    And the following users exist:
+      | email           | username | first_name |
+      | john@email.com | johndoe  | John       |
+      | jane@email.com | janedoe  | Jane       |
+    When I search for users with email containing "john"
+    Then I should see 1 user in the results
+    And the result should include "john@email.com"
+
+  Scenario: Search users with pagination
+    Given I am an authenticated administrator
+    And there are 25 users in the system
+    When I request page 1 with 10 users per page
+    Then I should see 10 users in the results
+    And I should see pagination metadata with total count 25

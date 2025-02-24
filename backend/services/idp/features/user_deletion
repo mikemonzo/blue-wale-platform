@@ -1,0 +1,16 @@
+Feature: User Deletion
+  As an administrator
+  I want to delete users
+  So that I can remove unused accounts
+
+  Scenario: Successfully delete a user
+    Given I am an authenticated administrator
+    And a user exists with email "john@email.com"
+    When I delete the user
+    Then the user should be deleted successfully
+    And I should not be able to find the user by email "john@email.com"
+
+  Scenario: Delete non-existent user
+    Given I am an authenticated administrator
+    When I try to delete a user with id "non-existent-id"
+    Then I should see an error "User not found"

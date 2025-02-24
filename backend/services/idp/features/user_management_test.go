@@ -11,19 +11,27 @@ import (
 )
 
 func TestFeatures(t *testing.T) {
-	// Initialize repositories and services
-	userRepo := memory.NewInMemoryUserRepository()
-	mailService := mocks.NewMockMailService()
-	userService := impl.NewUserService(userRepo, mailService)
-
 	suite := godog.TestSuite{
 		ScenarioInitializer: func(sc *godog.ScenarioContext) {
-			userContext := steps.NewUserCreationContext(userService, mailService, userRepo)
-			userContext.InitializeScenario(sc)
+			// Initialize repositories and services
+			userRepo := memory.NewInMemoryUserRepository()
+			mailService := mocks.NewMockMailService()
+			userService := impl.NewUserService(userRepo, mailService)
+
+			// Initialize contexts for different features
+			userCreationContext := steps.NewUserCreationContext(userService, mailService, userRepo)
+			userUpdateContext := steps.NewUserUpdateContext(userService, mailService, userRepo)
+
+			// Initialize scenarios for all features
+			userCreationContext.InitializeScenario(sc)
+			userUpdateContext.InitializeScenario(sc)
 		},
 		Options: &godog.Options{
-			Format:   "pretty",
-			Paths:    []string{"user_creation.feature"},
+			Format: "pretty",
+			Paths: []string{
+				"user_creation.feature",
+				"user_update.feature",
+			},
 			TestingT: t,
 		},
 	}

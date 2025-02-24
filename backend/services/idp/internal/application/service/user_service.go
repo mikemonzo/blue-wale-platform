@@ -8,4 +8,5 @@ import (
 
 type UserService interface {
 	Create(ctx context.Context, email, username, firstName, lastName, password string) (*model.User, error)
+	Update(ctx context.Context, user *model.User) error
 }

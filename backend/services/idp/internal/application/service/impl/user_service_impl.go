@@ -59,3 +59,24 @@ func (s *userService) Create(ctx context.Context, email, username, firstName, la
 
 	return user, nil
 }
+
+func (s *userService) Update(ctx context.Context, user *model.User) error {
+	// First get the existing user by ID to check old email
+	oldUser, err := s.userRepo.GetUserByEmail(ctx, user.Email)
+	if err != nil {
+		return fmt.Errorf("error retrieving user: %w", err)
+	}
+
+	// Check if new email already exists for a different user
+	if oldUser != nil && oldUser.ID != user.ID {
+		return fmt.Errorf("email already exists")
+	}
+
+	// Update user
+	user.UpdatedAt = time.Now()
+	if err := s.userRepo.Update(ctx, user); err != nil {
+		return fmt.Errorf("error updating user: %w", err)
+	}
+
+	return nil
+}
